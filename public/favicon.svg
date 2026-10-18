@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160">
+  <title>Elektro Prushi</title>
+  <rect width="160" height="160" rx="28" fill="#101113"/>
+  <g transform="translate(7 27)">
+    <path fill="#fff" d="M4 37C10 25 17 20 30 20H77L60 37ZM24 45H51L37 62H24Q20 62 20 66V73H65L54 88Q52 91 49 91H21Q0 91 0 73V65Q0 45 24 45Z"/>
+    <path fill="#fff" d="M100 20H116C134 20 145 32 145 48S133 74 117 74H92L110 56H116C123 56 127 52 127 47S123 37 116 37H90Z"/>
+    <path fill="#ffd127" d="M105 0 46 59H82L55 105 123 43H87Z"/>
+  </g>
+</svg>

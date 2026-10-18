@@ -1,0 +1,30 @@
+---
+import { isPreview, business } from '../data/site';
+interface Props {
+  kind?: 'section' | 'phone' | 'messenger';
+  label?: string;
+  variant?: string;
+}
+const {
+  kind = 'section',
+  label = 'Na kontaktoni',
+  variant = 'primary',
+} = Astro.props;
+---
+
+<a
+  class:list={['button', variant]}
+  href={
+    kind === 'section'
+      ? `${Astro.url.pathname === '/' ? '' : '/'}#kontakt`
+      : isPreview
+        ? `${Astro.url.pathname === '/' ? '' : '/'}#demo`
+        : kind === 'phone'
+          ? business.phoneHref
+          : business.messenger
+  }
+  data-demo={isPreview && kind !== 'section' ? 'true' : undefined}
+>
+  {label}
+  <span aria-hidden="true">↗</span>
+</a>

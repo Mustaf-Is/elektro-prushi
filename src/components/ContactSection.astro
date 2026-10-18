@@ -1,0 +1,68 @@
+---
+import ContactLink from './ContactLink.astro';
+import { business, isPreview } from '../data/site';
+---
+
+<section class="section" id="kontakt">
+  <div class="container">
+    <span class="eyebrow">LE TË BISEDOJMË</span>
+    <h2>Projekti juaj fillon këtu.</h2>
+  </div>
+  <div class="container contact-grid">
+    <article>
+      <span class="eyebrow">TELEFON</span>
+      <h3>{business.phone}</h3>
+      <p>Një bisedë e drejtpërdrejtë për nevojat tuaja.</p>
+      <ContactLink kind="phone" label="Na telefononi" />
+    </article>
+    <article>
+      <span class="eyebrow">MESSENGER</span>
+      <h3>Na shkruani.</h3>
+      <p>Dërgoni pyetjet tuaja përmes faqes së biznesit.</p>
+      <ContactLink kind="messenger" label="Hap Messenger" />
+    </article>
+    <article>
+      <span class="eyebrow">VENDNDODHJA</span>
+      <h3>
+        Kaçanik,
+        <br />
+        Kosovë.
+      </h3>
+      <p>Zona e shërbimit dhe disponueshmëria konfirmohen gjatë kontaktit.</p>
+    </article>
+    {isPreview && (
+      <p class="notice" id="demo">
+        Ky është një version demonstrues. Telefonatat dhe mesazhet janë të
+        çaktivizuara deri në miratimin nga biznesi. Të dhënat e kontaktit do të
+        rikonfirmohen para publikimit.
+      </p>
+    )}
+  </div>
+</section>
+<style>
+  .contact-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+  }
+  .contact-grid article {
+    padding: 28px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+  }
+  .contact-grid h3 {
+    font-size: 30px;
+    margin: 20px 0;
+  }
+  .contact-grid p {
+    color: var(--muted);
+  }
+  .notice {
+    grid-column: 1/-1;
+  }
+  @media (max-width: 1023px) {
+    .contact-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

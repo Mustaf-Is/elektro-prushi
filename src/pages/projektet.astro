@@ -1,0 +1,41 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Projects from '../components/Projects.astro';
+import { isPreview } from '../data/site';
+---
+
+<Layout
+  title="Projektet"
+  description="Shihni pamje nga ndriçimi komercial dhe instalimet dekorative të publikuara nga Elektro Prushi."
+>
+  <section class="page-head">
+    <div class="container">
+      <a class="breadcrumb" href="/">
+        Ballina
+      </a>
+      <span class="breadcrumb"> / Projektet</span>
+      <p class="eyebrow">NGA PUNIMET TONA</p>
+      <h1>
+        Detajet bëjnë
+        <br />
+        diferencën.
+      </h1>
+      <p>
+        Një vështrim nga afër te ndriçimi dhe instalimet. Zgjidhni një fotografi
+        për ta parë më të madhe.
+      </p>
+    </div>
+  </section>
+  <section class="section">
+    <div class="container">
+      <h2 class="sr-only">Pamje nga punimet tona</h2>
+      <Projects />
+      {isPreview && (
+        <p class="notice">
+          Fotografi nga faqja e biznesit në Facebook. Përzgjedhja dhe leja për
+          publikim përfundimtar presin miratimin e biznesit.
+        </p>
+      )}
+    </div>
+  </section>
+</Layout>

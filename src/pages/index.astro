@@ -1,0 +1,275 @@
+---
+import { Picture } from 'astro:assets';
+import hero from '../assets/hero.png';
+import Layout from '../layouts/Layout.astro';
+import ContactLink from '../components/ContactLink.astro';
+import Icon from '../components/Icon.astro';
+import Services from '../components/Services.astro';
+import Projects from '../components/Projects.astro';
+import ContactSection from '../components/ContactSection.astro';
+---
+
+<Layout
+  title="Zgjidhje elektrike. Punë me përkushtim."
+  description="Njihuni me Elektro Prushi: instalime elektrike, ndriçim dhe punime për shtëpi e biznese në Kaçanik."
+>
+  <section class="hero" id="ballina">
+    <Picture
+      src={hero}
+      fallbackFormat="jpg"
+      formats={['avif', 'webp']}
+      widths={[640, 960, 1440, 1920]}
+      sizes="100vw"
+      alt=""
+      loading="eager"
+      fetchpriority="high"
+      class="hero-image"
+    />
+    <div class="hero-shade"></div>
+    <div class="container hero-content">
+      <span class="eyebrow">ELEKTRO INSTALUES · KAÇANIK</span>
+      <h1>
+        Zgjidhje elektrike.
+        <br />
+        <em>
+          Punë me
+          <br class="desktop-break" /> përkushtim.
+        </em>
+      </h1>
+      <p>Instalime elektrike për shtëpi dhe biznese.</p>
+      <div class="actions">
+        <ContactLink label="Kërko ofertë" />
+        <a class="button outline" href="#projektet">
+          Shiko projektet <span aria-hidden="true">↗</span>
+        </a>
+      </div>
+    </div>
+  </section>
+  <div class="benefits">
+    <div class="container benefit-grid">
+      {[
+        ['shield', 'Punë e kujdesshme'],
+        ['tool', 'Zgjidhje praktike'],
+        ['chat', 'Komunikim i qartë'],
+      ].map(([icon, text]) => (
+        <div>
+          <Icon name={icon} />
+          <span>{text}</span>
+        </div>
+      ))}
+    </div>
+  </div>
+  <section class="section soft" id="sherbimet">
+    <div class="container">
+      <span class="eyebrow">SHËRBIMET TONA</span>
+      <h2>Energjia e duhur për çdo hap.</h2>
+      <Services />
+    </div>
+  </section>
+  <section class="section" id="projektet">
+    <div class="container">
+      <div class="section-heading">
+        <div>
+          <span class="eyebrow">PROJEKTET TONA</span>
+          <h2>Detajet bëjnë diferencën.</h2>
+        </div>
+        <a class="text-link" href="/projektet/">
+          Të gjitha projektet ↗
+        </a>
+      </div>
+      <Projects />
+    </div>
+  </section>
+  <section class="section soft" id="rreth-nesh">
+    <div class="container about">
+      <div>
+        <span class="eyebrow">RRETH NESH</span>
+        <h2>
+          Përkushtim në
+          <br />
+          çdo lidhje.
+        </h2>
+      </div>
+      <div>
+        <p>
+          Elektro Prushi është një biznes i instalimeve elektrike në Kaçanik.
+          Kjo faqe ju prezanton me shërbimet dhe disa nga pamjet e punimeve të
+          publikuara nga biznesi.
+        </p>
+        <p>
+          Një projekt fillon me një bisedë. Na tregoni çfarë keni në mendje dhe
+          le të diskutojmë nevojat tuaja.
+        </p>
+        <a class="text-link" href="#kontakt">
+          Njihuni me mënyrat e kontaktit ↗
+        </a>
+      </div>
+    </div>
+  </section>
+  <ContactSection />
+</Layout>
+<style>
+  .hero {
+    position: relative;
+    isolation: isolate;
+    background: #101113;
+    color: #fff;
+    min-height: 590px;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+  }
+  .hero :global(picture) {
+    position: absolute;
+    inset: 0;
+    z-index: -3;
+  }
+  .hero :global(picture img) {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+    object-position: center;
+  }
+  .hero-shade {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: linear-gradient(
+      90deg,
+      #08090bc9 0%,
+      #08090b40 60%,
+      transparent
+    );
+  }
+  .hero-content {
+    padding-block: 75px;
+  }
+  .hero .eyebrow {
+    color: var(--yellow);
+  }
+  h1 {
+    font-size: clamp(44px, 4.8vw, 70px);
+    font-weight: 800;
+    letter-spacing: -2.7px;
+    line-height: 1.04;
+    margin: 25px 0 20px;
+    max-width: 790px;
+  }
+  em {
+    font-style: normal;
+    color: var(--yellow);
+  }
+  .hero p {
+    font-size: 20px;
+    margin: 0 0 32px;
+  }
+  .benefits {
+    border-bottom: 1px solid #e8e8eb;
+  }
+  .benefit-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    padding-block: 28px;
+  }
+  .benefit-grid > div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 22px;
+    border-right: 1px solid #ddd;
+    font-size: 15px;
+    font-weight: 700;
+  }
+  .benefit-grid > div:last-child {
+    border: none;
+  }
+  .benefit-grid :global(svg) {
+    height: 38px;
+    width: 38px;
+    color: var(--gold);
+  }
+  .about {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 70px;
+  }
+  .about p {
+    color: var(--muted);
+    margin-top: 0;
+  }
+  @media (min-width: 1600px) {
+    .hero {
+      min-height: 650px;
+    }
+  }
+  @media (max-width: 767px) {
+    .hero {
+      min-height: 560px;
+    }
+    .hero-content {
+      padding-block: 55px;
+    }
+    h1 {
+      font-size: 48px;
+      letter-spacing: -2px;
+    }
+    .hero p {
+      font-size: 17px;
+      max-width: 300px;
+    }
+    .about {
+      grid-template-columns: 1fr;
+      gap: 0;
+    }
+    .benefit-grid > div {
+      gap: 10px;
+      font-size: 12px;
+    }
+  }
+  @media (max-width: 599px) {
+    h1 {
+      font-size: 42px;
+      max-width: 340px;
+    }
+    .hero {
+      min-height: 585px;
+    }
+    .hero :global(picture img) {
+      object-position: 72% center;
+    }
+    .hero-shade {
+      background: linear-gradient(90deg, #08090bdb, #08090b50);
+    }
+    .hero .actions {
+      flex-direction: column;
+      max-width: 400px;
+    }
+    .hero .actions :global(.button) {
+      width: 100%;
+    }
+    .benefit-grid {
+      grid-template-columns: 1fr;
+      gap: 18px;
+      padding-block: 24px;
+    }
+    .benefit-grid > div {
+      justify-content: center;
+      flex-direction: column;
+      text-align: center;
+      border: none;
+      font-size: 15.4px;
+      gap: 8px;
+    }
+    .benefit-grid :global(svg) {
+      width: 28.6px;
+      height: 28.6px;
+    }
+    .hero .eyebrow {
+      font-size: 10px;
+      letter-spacing: 1.5px;
+    }
+    .desktop-break {
+      display: none;
+    }
+  }
+</style>

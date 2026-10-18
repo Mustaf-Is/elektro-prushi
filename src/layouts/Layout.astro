@@ -1,0 +1,443 @@
+---
+import '../styles/global.css';
+import Brand from '../components/Brand.astro';
+import ContactLink from '../components/ContactLink.astro';
+import { business, isPreview } from '../data/site';
+interface Props {
+  title: string;
+  description: string;
+}
+const { title, description } = Astro.props;
+const sectionHref = (id: string) =>
+  `${Astro.url.pathname === '/' ? '' : '/'}#${id}`;
+const links = [
+  [sectionHref('ballina'), 'Ballina'],
+  [sectionHref('sherbimet'), 'Shërbimet'],
+  [sectionHref('projektet'), 'Projektet'],
+  [sectionHref('rreth-nesh'), 'Rreth nesh'],
+  [sectionHref('kontakt'), 'Kontakt'],
+];
+const canonical =
+  !isPreview && Astro.site
+    ? new URL(Astro.url.pathname, Astro.site).href
+    : undefined;
+---
+
+<!doctype html>
+<html lang="sq">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title} | Elektro Prushi</title>
+    <meta name="description" content={description} />
+    <noscript>
+      <link rel="stylesheet" href="/no-js.css" />
+    </noscript>
+    <meta name="theme-color" content="#101113" />
+    <link rel="icon" href="/favicon.svg?v=2" type="image/svg+xml" sizes="any" />
+    {isPreview && <meta name="robots" content="noindex, nofollow" />}
+    {canonical && <link rel="canonical" href={canonical} />}
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="sq_AL" />
+    <meta property="og:title" content={`${title} | Elektro Prushi`} />
+    <meta property="og:description" content={description} />
+    <meta
+      property="og:image"
+      content={
+        Astro.site ? new URL('/social.jpg', Astro.site).href : '/social.jpg'
+      }
+    />
+    {canonical && <meta property="og:url" content={canonical} />}
+    <meta name="twitter:card" content="summary_large_image" />
+    {!isPreview && (
+      <script
+        type="application/ld+json"
+        set:html={JSON.stringify({
+          '@context': 'https://schema.org',
+          '@type': 'Electrician',
+          name: business.name,
+          url: Astro.site?.href,
+          telephone: business.phoneHref.slice(4),
+          sameAs: [business.facebook],
+        })}
+      />
+    )}
+  </head>
+  <body>
+    <a class="skip" href="#main">
+      Kalo te përmbajtja
+    </a>
+    <header class="header">
+      <div class="container header-inner">
+        <Brand />
+        <button
+          class="menu-toggle"
+          aria-expanded="false"
+          aria-controls="navigation"
+          hidden
+        >
+          <span class="sr-only">Hap menynë</span>
+          <span class="menu-icon" aria-hidden="true">
+            <span></span>
+            <span></span>
+            <span></span>
+          </span>
+        </button>
+        <nav id="navigation" aria-label="Navigimi kryesor">
+          {links.map(([href, label]) => (
+            <a
+              href={href}
+              aria-current={
+                Astro.url.pathname === '/' && href === '#ballina'
+                  ? 'location'
+                  : undefined
+              }
+            >
+              {label}
+            </a>
+          ))}
+          <ContactLink label="Na kontaktoni" />
+        </nav>
+      </div>
+    </header>
+    <main id="main">
+      <slot />
+    </main>
+    <section class="contact-band">
+      <div class="container band-inner">
+        <h2>
+          Le të flasim
+          <br />
+          për projektin tuaj.
+        </h2>
+        <ContactLink variant="dark" />
+      </div>
+    </section>
+    <footer>
+      <div class="container footer-main">
+        <Brand />
+        <div class="footer-contacts">
+          <ContactLink
+            kind="phone"
+            label={business.phone}
+            variant="footer-link"
+          />
+          <span>{business.location}</span>
+          <a href={business.facebook}>Facebook ↗</a>
+        </div>
+      </div>
+      <div class="container footer-bottom">
+        <span>© {new Date().getFullYear()} Elektro Prushi</span>
+        {isPreview && <span>Koncept prezantues · Përmbajtje në shqyrtim</span>}
+      </div>
+    </footer>
+    <dialog
+      id="demo-dialog"
+      aria-labelledby="demo-title"
+      aria-describedby="demo-text"
+    >
+      <button class="dialog-close" autofocus aria-label="Mbyll njoftimin">
+        ✕
+      </button>
+      <span class="eyebrow">VERSION DEMONSTRUES</span>
+      <h2 id="demo-title">Le të mbetemi në kontakt.</h2>
+      <p id="demo-text">
+        Ky është një prezantim i faqes. Telefonatat dhe mesazhet do të
+        aktivizohen pas miratimit nga biznesi.
+      </p>
+      <button class="button primary" data-dismiss>
+        E kuptova
+      </button>
+    </dialog>
+    <script>
+      import { containFocus } from '../components/dialog';
+      const toggle = document.querySelector<HTMLButtonElement>('.menu-toggle');
+      const nav = document.querySelector<HTMLElement>('#navigation');
+      if (toggle && nav) {
+        toggle.hidden = false;
+        nav.classList.add('enhanced');
+        const close = () => {
+          toggle.setAttribute('aria-expanded', 'false');
+          nav.classList.remove('open');
+          toggle.querySelector('.sr-only')!.textContent = 'Hap menynë';
+        };
+        toggle.addEventListener('click', () => {
+          const open = toggle.getAttribute('aria-expanded') !== 'true';
+          toggle.setAttribute('aria-expanded', String(open));
+          nav.classList.toggle('open', open);
+          toggle.querySelector('.sr-only')!.textContent = open
+            ? 'Mbyll menynë'
+            : 'Hap menynë';
+        });
+        nav
+          .querySelectorAll('a')
+          .forEach((a) => a.addEventListener('click', close));
+        document.addEventListener('keydown', (e) => {
+          if (
+            e.key === 'Escape' &&
+            toggle.getAttribute('aria-expanded') === 'true'
+          ) {
+            close();
+            toggle.focus();
+          }
+        });
+        document.addEventListener('click', (e) => {
+          if (
+            !nav.contains(e.target as Node) &&
+            !toggle.contains(e.target as Node)
+          )
+            close();
+        });
+      }
+      const updateSection = () => {
+        const hash = window.location.hash || '#ballina';
+        nav
+          ?.querySelectorAll<HTMLAnchorElement>('a[href*="#"]')
+          .forEach((link) => {
+            if (
+              window.location.pathname === '/' &&
+              link.hash === hash &&
+              !link.classList.contains('button')
+            )
+              link.setAttribute('aria-current', 'location');
+            else link.removeAttribute('aria-current');
+          });
+      };
+      window.addEventListener('hashchange', updateSection);
+      updateSection();
+      const demo = document.querySelector<HTMLDialogElement>('#demo-dialog');
+      if (demo) {
+        containFocus(demo);
+        let trigger: HTMLElement | undefined;
+        document
+          .querySelectorAll<HTMLAnchorElement>('[data-demo]')
+          .forEach((a) =>
+            a.addEventListener('click', (e) => {
+              e.preventDefault();
+              trigger = a;
+              demo.showModal();
+            }),
+          );
+        demo
+          .querySelectorAll('button')
+          .forEach((b) => b.addEventListener('click', () => demo.close()));
+        demo.addEventListener('close', () => trigger?.focus());
+        demo.addEventListener('click', (e) => {
+          if (e.target === demo) demo.close();
+        });
+      }
+    </script>
+    <style>
+      .header {
+        background: #0b0c0e;
+        color: white;
+        border-bottom: 1px solid #292a2e;
+        position: relative;
+        z-index: 10;
+      }
+      .header-inner {
+        min-height: 94px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 30px;
+      }
+      nav {
+        display: flex;
+        align-items: center;
+        gap: 30px;
+      }
+      nav > a:not(.button) {
+        font-size: 13px;
+        font-weight: 700;
+        text-decoration: none;
+        padding: 20px 0;
+        position: relative;
+      }
+      nav > a[aria-current='location']::after {
+        content: '';
+        height: 3px;
+        background: var(--yellow);
+        position: absolute;
+        bottom: 9px;
+        left: 0;
+        right: 0;
+      }
+      .menu-toggle {
+        display: none;
+        background: transparent;
+        color: #fff;
+        border: 1px solid #56575c;
+        border-radius: 4px;
+        width: 46px;
+        height: 46px;
+        font-size: 24px;
+        cursor: pointer;
+      }
+      .menu-toggle[hidden] {
+        display: none;
+      }
+      .menu-icon {
+        display: block;
+        position: relative;
+        width: 22px;
+        height: 18px;
+        margin: auto;
+      }
+      .menu-icon > span {
+        position: absolute;
+        left: 0;
+        top: 8px;
+        width: 22px;
+        height: 2px;
+        border-radius: 2px;
+        background: currentColor;
+        transition:
+          transform 200ms ease,
+          opacity 150ms ease;
+      }
+      .menu-icon > span:first-child {
+        transform: translateY(-7px);
+      }
+      .menu-icon > span:last-child {
+        transform: translateY(7px);
+      }
+      .menu-toggle[aria-expanded='true'] .menu-icon > span:first-child {
+        transform: rotate(45deg);
+      }
+      .menu-toggle[aria-expanded='true'] .menu-icon > span:nth-child(2) {
+        opacity: 0;
+        transform: scaleX(0);
+      }
+      .menu-toggle[aria-expanded='true'] .menu-icon > span:last-child {
+        transform: rotate(-45deg);
+      }
+      .contact-band {
+        background: var(--yellow);
+        padding: 44px 0;
+      }
+      .band-inner {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 30px;
+      }
+      .band-inner h2 {
+        margin: 0;
+        color: #111;
+      }
+      footer {
+        background: #0b0c0e;
+        color: #d8d8db;
+        padding: 32px 0 22px;
+      }
+      .footer-main {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 30px;
+      }
+      .footer-contacts {
+        display: flex;
+        align-items: center;
+        gap: 26px;
+        font-size: 13px;
+      }
+      .footer-contacts :global(.footer-link) {
+        padding: 0;
+        min-height: 44px;
+        gap: 8px;
+        color: #fff;
+      }
+      .footer-contacts > a {
+        text-decoration: none;
+      }
+      .footer-bottom {
+        display: flex;
+        justify-content: space-between;
+        gap: 20px;
+        border-top: 1px solid #292a2e;
+        margin-top: 28px;
+        padding-top: 20px;
+        font-size: 11px;
+        color: #a1a2aa;
+      }
+      #demo-dialog {
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        padding: 38px;
+        width: min(540px, calc(100% - 32px));
+        color: #111;
+      }
+      #demo-dialog::backdrop {
+        background: #000b;
+      }
+      #demo-dialog h2 {
+        font-size: 32px;
+        margin-bottom: 20px;
+      }
+      #demo-dialog p {
+        color: var(--muted);
+      }
+      .dialog-close {
+        display: block;
+        margin: 0 0 24px auto;
+        min-width: 44px;
+        min-height: 44px;
+        background: #eee;
+        border: 0;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+      @media (max-width: 1023px) {
+        .header-inner {
+          flex-wrap: wrap;
+          min-height: 80px;
+          gap: 0;
+        }
+        .menu-toggle:not([hidden]) {
+          display: block;
+        }
+        nav {
+          display: none;
+          width: 100%;
+          flex-direction: column;
+          align-items: stretch;
+          gap: 0;
+          padding: 12px 0 24px;
+        }
+        nav.enhanced {
+          display: none;
+        }
+        nav.enhanced.open {
+          display: flex;
+        }
+        nav > a[aria-current='location']::after {
+          right: auto;
+          width: 24px;
+        }
+        .footer-main {
+          flex-direction: column;
+          align-items: start;
+        }
+      }
+      @media (max-width: 599px) {
+        .band-inner {
+          flex-direction: column;
+          align-items: start;
+        }
+        .band-inner :global(.button) {
+          width: 100%;
+        }
+        .footer-contacts {
+          flex-wrap: wrap;
+          gap: 12px 20px;
+        }
+        .footer-bottom {
+          flex-direction: column;
+          gap: 10px;
+        }
+      }
+    </style>
+  </body>
+</html>

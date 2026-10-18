@@ -1,0 +1,93 @@
+---
+import { services } from '../data/site';
+import Icon from './Icon.astro';
+---
+
+<div class="service-grid">
+  {services.map((s, i) => (
+    <article class="service-card">
+      <div class="service-top">
+        <Icon name={s.icon} />
+        <span>0{i + 1}</span>
+      </div>
+      <h3>{s.title}</h3>
+      <p>{s.text}</p>
+      <a
+        class="round-link"
+        href="#kontakt"
+        aria-label={`Diskuto projektin: ${s.title}`}
+      >
+        <Icon name="arrow" />
+      </a>
+    </article>
+  ))}
+</div>
+<style>
+  .service-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 22px;
+  }
+  .service-card {
+    background: #fff;
+    border: 1px solid #dedfe3;
+    border-radius: 8px;
+    padding: 30px;
+    position: relative;
+  }
+  .service-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: start;
+    color: #686b73;
+  }
+  .service-top :global(svg) {
+    width: 48px;
+    height: 48px;
+    color: var(--gold);
+  }
+  .service-top span {
+    font-size: 13px;
+  }
+  h3 {
+    font-size: 23px;
+    letter-spacing: -0.8px;
+    margin: 24px 0 10px;
+  }
+  p {
+    color: var(--muted);
+    line-height: 1.65;
+    margin: 0 0 20px;
+  }
+  .round-link {
+    display: grid;
+    place-items: center;
+    width: 38px;
+    height: 38px;
+    background: #f1f2f4;
+    border-radius: 50%;
+    color: #111;
+  }
+  .round-link:hover {
+    background: var(--yellow);
+  }
+  @media (max-width: 1023px) and (min-width: 600px) {
+    .service-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    .service-card:last-child {
+      grid-column: 1/-1;
+    }
+  }
+  @media (max-width: 599px) {
+    .service-grid {
+      grid-template-columns: 1fr;
+    }
+    .service-card {
+      padding: 24px;
+    }
+    h3 {
+      margin-top: 16px;
+    }
+  }
+</style>

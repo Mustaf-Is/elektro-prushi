@@ -1,0 +1,222 @@
+---
+import { Picture, getImage } from 'astro:assets';
+import { projects } from '../data/site';
+const large = await Promise.all(
+  projects.map((p) => getImage({ src: p.image, width: 1200, format: 'webp' })),
+);
+---
+
+<div class="project-grid">
+  {projects.map((p, i) => (
+    <article class="project-card">
+      <a
+        class="project-image"
+        href={large[i].src}
+        data-gallery
+        data-caption={p.title}
+        aria-label={`Zmadho fotografinë: ${p.title}`}
+      >
+        <Picture
+          src={p.image}
+          formats={['avif', 'webp']}
+          widths={[360, 600, 800]}
+          sizes="(max-width:599px) calc(100vw - 40px), (max-width:1023px) 45vw, 380px"
+          alt={p.alt}
+          loading="lazy"
+          width={800}
+        />
+        <span class="zoom" aria-hidden="true">
+          ↗
+        </span>
+      </a>
+      <div class="caption">
+        <h3>{p.title}</h3>
+        <span aria-hidden="true">↗</span>
+      </div>
+    </article>
+  ))}
+</div>
+<p class="photo-source">
+  Nga galeria jonë në{' '}
+  <a href="https://www.facebook.com/elektroinstaluesprushi/photos">
+    Facebook ↗
+  </a>
+</p>
+<dialog id="gallery-dialog" aria-labelledby="gallery-caption">
+  <div class="gallery-toolbar">
+    <span id="gallery-count"></span>
+    <button autofocus data-close aria-label="Mbyll fotografinë">
+      ✕
+    </button>
+  </div>
+  <img id="gallery-image" alt="" width="900" height="1000" />
+  <div class="gallery-bottom">
+    <button data-prev aria-label="Fotografia e mëparshme">
+      ←
+    </button>
+    <p id="gallery-caption"></p>
+    <button data-next aria-label="Fotografia tjetër">
+      →
+    </button>
+  </div>
+</dialog>
+<script>
+  import { containFocus } from './dialog';
+  const dialog = document.querySelector<HTMLDialogElement>('#gallery-dialog');
+  const links = Array.from(
+    document.querySelectorAll<HTMLAnchorElement>('[data-gallery]'),
+  );
+  if (dialog) {
+    containFocus(dialog);
+    let index = 0;
+    let trigger: HTMLAnchorElement | undefined;
+    const image = dialog.querySelector<HTMLImageElement>('#gallery-image')!;
+    const show = (n: number) => {
+      index = (n + links.length) % links.length;
+      const link = links[index];
+      image.src = link.href;
+      image.alt = link.querySelector('img')?.alt || '';
+      dialog.querySelector('#gallery-caption')!.textContent =
+        link.dataset.caption || '';
+      dialog.querySelector('#gallery-count')!.textContent =
+        `${index + 1} / ${links.length}`;
+    };
+    links.forEach((link, i) =>
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        trigger = link;
+        show(i);
+        dialog.showModal();
+      }),
+    );
+    dialog
+      .querySelector('[data-close]')
+      ?.addEventListener('click', () => dialog.close());
+    dialog
+      .querySelector('[data-prev]')
+      ?.addEventListener('click', () => show(index - 1));
+    dialog
+      .querySelector('[data-next]')
+      ?.addEventListener('click', () => show(index + 1));
+    dialog.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowLeft') {
+        e.preventDefault();
+        show(index - 1);
+      }
+      if (e.key === 'ArrowRight') {
+        e.preventDefault();
+        show(index + 1);
+      }
+    });
+    dialog.addEventListener('click', (e) => {
+      if (e.target === dialog) dialog.close();
+    });
+    dialog.addEventListener('close', () => trigger?.focus());
+  }
+</script>
+<style>
+  .project-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+  .project-image {
+    display: block;
+    position: relative;
+    overflow: hidden;
+    border-radius: 7px;
+    background: #e9e9e9;
+  }
+  .project-image :global(img) {
+    display: block;
+    width: 100%;
+    height: 290px;
+    object-fit: cover;
+    transition: transform 0.2s;
+  }
+  .project-image:hover :global(img) {
+    transform: scale(1.025);
+  }
+  .zoom {
+    position: absolute;
+    bottom: 12px;
+    right: 12px;
+    background: #fff;
+    width: 34px;
+    height: 34px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    color: #111;
+  }
+  .caption {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+  }
+  h3 {
+    font-size: 16px;
+    font-weight: 600;
+  }
+  .photo-source {
+    font-size: 12px;
+    color: var(--muted);
+    text-align: right;
+    margin-top: 22px;
+  }
+  .photo-source a {
+    color: inherit;
+  }
+  #gallery-dialog {
+    background: #111;
+    color: #fff;
+    border: 1px solid #555;
+    width: min(1000px, 94vw);
+    max-height: 94dvh;
+    padding: 16px;
+    border-radius: 10px;
+  }
+  #gallery-dialog::backdrop {
+    background: #000d;
+  }
+  #gallery-image {
+    display: block;
+    width: 100%;
+    height: 65dvh;
+    object-fit: contain;
+  }
+  .gallery-toolbar,
+  .gallery-bottom {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+  }
+  .gallery-bottom p {
+    text-align: center;
+  }
+  .gallery-toolbar button,
+  .gallery-bottom button {
+    background: #292929;
+    color: #fff;
+    border: 1px solid #666;
+    border-radius: 4px;
+    min-width: 44px;
+    min-height: 44px;
+    cursor: pointer;
+  }
+  @media (max-width: 1023px) and (min-width: 600px) {
+    .project-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  @media (max-width: 599px) {
+    .project-grid {
+      grid-template-columns: 1fr;
+    }
+    .project-image :global(img) {
+      height: 320px;
+    }
+  }
+</style>
