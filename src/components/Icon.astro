@@ -1,8 +1,9 @@
 ---
 interface Props {
   name: string;
+  size?: number;
 }
-const { name } = Astro.props;
+const { name, size = 24 } = Astro.props;
 const paths: Record<string, string> = {
   house: 'M3 11 12 3l9 8M5 10v11h5v-7h4v7h5V10',
   bulb: 'M9 18h6m-6 3h6M8 14a7 7 0 1 1 8 0c-1 1-1 2-1 3H9c0-1 0-2-1-3Z',
@@ -10,13 +11,15 @@ const paths: Record<string, string> = {
   shield: 'M12 2 3 6v6c0 5 9 10 9 10s9-5 9-10V6ZM8 12l3 3 5-6',
   chat: 'M21 11a9 9 0 0 1-9 9H4l-3 2 2-7a9 9 0 1 1 18-4Z',
   arrow: 'M4 12h16m-6-6 6 6-6 6',
+  'arrow-up-right': 'M6 18 18 6M6 6h12v12',
+  'arrow-left': 'M20 12H4m6-6-6 6 6 6',
   phone: 'M5 3h4l2 5-3 2c2 3 3 4 6 6l2-3 5 2v4c0 5-8 1-12-3S0 3 5 3Z',
 };
 ---
 
 <svg
-  width="24"
-  height="24"
+  width={size}
+  height={size}
   viewBox="0 0 24 24"
   fill="none"
   stroke="currentColor"
@@ -24,6 +27,13 @@ const paths: Record<string, string> = {
   stroke-linecap="round"
   stroke-linejoin="round"
   aria-hidden="true"
+  focusable="false"
 >
   <path d={paths[name] || paths.arrow} />
 </svg>
+<style>
+  svg {
+    flex-shrink: 0;
+    vertical-align: middle;
+  }
+</style>

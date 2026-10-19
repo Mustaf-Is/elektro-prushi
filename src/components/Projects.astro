@@ -1,6 +1,7 @@
 ---
 import { Picture, getImage } from 'astro:assets';
 import { projects } from '../data/site';
+import Icon from './Icon.astro';
 const large = await Promise.all(
   projects.map((p) => getImage({ src: p.image, width: 1200, format: 'webp' })),
 );
@@ -26,12 +27,12 @@ const large = await Promise.all(
           width={800}
         />
         <span class="zoom" aria-hidden="true">
-          ↗
+          <Icon name="arrow-up-right" size={16} />
         </span>
       </a>
       <div class="caption">
         <h3>{p.title}</h3>
-        <span aria-hidden="true">↗</span>
+        <Icon name="arrow-up-right" size={16} />
       </div>
     </article>
   ))}
@@ -39,7 +40,7 @@ const large = await Promise.all(
 <p class="photo-source">
   Nga galeria jonë në{' '}
   <a href="https://www.facebook.com/elektroinstaluesprushi/photos">
-    Facebook ↗
+    Facebook <Icon name="arrow-up-right" size={14} />
   </a>
 </p>
 <dialog id="gallery-dialog" aria-labelledby="gallery-caption">
@@ -52,11 +53,11 @@ const large = await Promise.all(
   <img id="gallery-image" alt="" width="900" height="1000" />
   <div class="gallery-bottom">
     <button data-prev aria-label="Fotografia e mëparshme">
-      ←
+      <Icon name="arrow-left" size={20} />
     </button>
     <p id="gallery-caption"></p>
     <button data-next aria-label="Fotografia tjetër">
-      →
+      <Icon name="arrow" size={20} />
     </button>
   </div>
 </dialog>

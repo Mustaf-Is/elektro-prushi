@@ -2,6 +2,7 @@
 import '../styles/global.css';
 import Brand from '../components/Brand.astro';
 import ContactLink from '../components/ContactLink.astro';
+import Icon from '../components/Icon.astro';
 import { business, isPreview } from '../data/site';
 interface Props {
   title: string;
@@ -123,7 +124,9 @@ const canonical =
             variant="footer-link"
           />
           <span>{business.location}</span>
-          <a href={business.facebook}>Facebook ↗</a>
+          <a href={business.facebook}>
+            Facebook <Icon name="arrow-up-right" size={14} />
+          </a>
         </div>
       </div>
       <div class="container footer-bottom">

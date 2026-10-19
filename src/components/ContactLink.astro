@@ -1,5 +1,6 @@
 ---
 import { isPreview, business } from '../data/site';
+import Icon from './Icon.astro';
 interface Props {
   kind?: 'section' | 'phone' | 'messenger';
   label?: string;
@@ -26,5 +27,5 @@ const {
   data-demo={isPreview && kind !== 'section' ? 'true' : undefined}
 >
   {label}
-  <span aria-hidden="true">↗</span>
+  <Icon name="arrow-up-right" size={16} />
 </a>
